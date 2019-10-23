@@ -5,11 +5,11 @@
 #ifndef _NMEA_H_
 #define _NMEA_H_
 
-#define SENTENCE_MAX_LENGTH 82
+#define NMEA_SENTENCE_LENGTH_MAX 82
 
 typedef struct {
-  char   date[6]; // UTC Date, the format is YYMMDD.
-  char   time[6]; // UTC Time, the format is HHMMSS.
+  char   date[6];   // UTC Date, the format is YYMMDD.
+  char   time[6];   // UTC Time, the format is HHMMSS.
   double latitude;
   double longitude;
   double speed;
