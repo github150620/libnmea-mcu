@@ -8,6 +8,7 @@
 #define NMEA_SENTENCE_LENGTH_MAX 82
 
 typedef struct {
+  char   status;    // 'A' - active, 'V' - Void.
   char   date[6];   // UTC Date, the format is YYMMDD.
   char   time[6];   // UTC Time, the format is HHMMSS.
   double latitude;
@@ -19,6 +20,6 @@ typedef struct {
 /* Example:
  *   $GPRMC,073601.00,A,2930.74875,N,10634.26655,E,2.592,181.57,231019,,,D*65\r\n
  */
-int nmea_parse_gprmc(char *sentence, nmea_grmc_t *rmc);
+int nmea_parse_gprmc(char *sentence, nmea_gprmc_t *rmc);
 
 #endif
