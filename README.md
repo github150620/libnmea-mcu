@@ -1,5 +1,5 @@
 # libnmea-mcu
-NMEA lib for MCU
+C library for parsing NMEA 0183. It is designed for MCU and also can be used for PC.
 
 ## How to use
 Copy ```nmea.c``` and ```nmea.h``` to your project, and write code like follows.
