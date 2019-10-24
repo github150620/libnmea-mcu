@@ -2,6 +2,7 @@
 NMEA lib for MCU
 
 ## How to use
+Copy ```nmea.c``` and ```nmea.h``` to your project, and write code like follows.
 ```
 #include "nmea.h"
 #include <stdio.h>
@@ -37,4 +38,8 @@ int main() {
 }
 ```
 
-[^1]:http://www.gpsinformation.org/dale/nmea.htm
+## Reference
+http://www.gpsinformation.org/dale/nmea.htm
+
+## Contact Me
+E-mail: 597540267@qq.com
