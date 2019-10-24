@@ -1,8 +1,3 @@
-# libnmea-mcu
-NMEA lib for MCU
-
-## How to use
-```
 #include "nmea.h"
 #include <stdio.h>
 
@@ -35,6 +30,3 @@ int main() {
         rmc.date[5]);
     return 0;
 }
-```
-
-[^1]:http://www.gpsinformation.org/dale/nmea.htm

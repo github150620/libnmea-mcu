@@ -5,7 +5,7 @@
 /* Example:
  *   $GPRMC,073601.00,A,2930.74875,N,10634.26655,E,2.592,181.57,231019,,,D*65\r\n
  */
-int nmea_parse_rmc(char *sentence, nmea_gprmc_t *rmc) {
+int nmea_parse_gprmc(char *sentence, nmea_gprmc_t *rmc) {
   char *p;
   int i;
   int j = 0;
@@ -96,7 +96,7 @@ int nmea_parse_rmc(char *sentence, nmea_gprmc_t *rmc) {
   if (comma_position[5] - comma_position[4] == 1) {
     rmc->longitude = 0.0;
   } else if (comma_position[5] - comma_position[4] >= 10) {
-    p = &sentence[comma_position[2]+1];
+    p = &sentence[comma_position[4]+1];
     rmc->longitude = 0.0;
     rmc->longitude += (p[0] - '0') * 100;
     rmc->longitude += (p[1] - '0') * 10;
@@ -152,10 +152,41 @@ int nmea_parse_rmc(char *sentence, nmea_gprmc_t *rmc) {
         }
       }
     }
+    rmc->speed *= 1.852;
   } else {
     return -1;
   }
+
   // heading
+  if (comma_position[8] - comma_position[7] == 1) {
+    rmc->heading = 0.0;
+  } else if (comma_position[8] - comma_position[7] >= 2) {
+    p = &sentence[comma_position[7]+1];
+    rmc->heading = 0.0;
+    for (i=0; i < comma_position[8] - comma_position[7] - 1; i++) {
+      if (p[i]=='.') break;
+      rmc->heading = rmc->heading * 10 + (p[i] - '0');
+    }
+    if (p[i+1] != ',') {
+      rmc->heading += (p[i+1] - '0') * 0.1;
+      if (p[i+2] != ',') {
+        rmc->heading += (p[i+2] - '0') * 0.01;
+      }
+    }
+  } else {
+    return -1;
+  }
+
+  // date
+  if (comma_position[9] - comma_position[8] == 1) {
+    rmc->date[0] = '0'; 
+  } else if (comma_position[9] - comma_position[8] == 7) {
+    memcpy(rmc->date, &sentence[comma_position[8]+1], 6);
+  } else {
+    return -1;
+  }
+
+  // Magnetic Variation
 
   return 0;
 }
