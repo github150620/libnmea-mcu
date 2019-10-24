@@ -8,13 +8,13 @@
 #define NMEA_SENTENCE_LENGTH_MAX 82
 
 typedef struct {
-  char   status;    // 'A' - active, 'V' - Void.
-  char   date[6];   // UTC Date, the format is YYMMDD.
-  char   time[6];   // UTC Time, the format is HHMMSS.
-  double latitude;
-  double longitude;
-  double speed;
-  double heading;
+  char   status;    // 'A' - active, 'V' - Void
+  char   date[6];   // YYMMDD(UTC)
+  char   time[6];   // HHMMSS(UTC)
+  double latitude;  // -90 ~ +90
+  double longitude; // - 180 ~ +180
+  double speed;     // km/h
+  double heading;   // 0 ~ 359.99
 }nmea_gprmc_t;
 
 /* Example:
