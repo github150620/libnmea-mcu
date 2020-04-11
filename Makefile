@@ -2,10 +2,10 @@ CC := gcc
 OBJECTS := test.o nmea_common.o nmea_gprmc.o
 
 test:
-	$(cc) -o test $(OBJECTS)
+	$(CC) -o test $(OBJECTS)
 
 %.o: %.c
-	$(cc) -c -o $@ $<
+	$(CC) -c -o $@ $<
 
 .PHONY: clean
 clean:
