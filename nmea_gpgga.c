@@ -6,7 +6,7 @@
  *   $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
  */
 
-int nmea_parse_gpgga(char *sentence, nmea_gprmc_t *gga) {
+int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
   char *p;
   int i;
   int j = 0;
@@ -107,24 +107,37 @@ int nmea_parse_gpgga(char *sentence, nmea_gprmc_t *gga) {
     return -1;
   }
 
-  if (comma_position[5] - comma_position[4] == 1) {
-    gga->longitude = 0.0;
-  } else if (comma_position[5] - comma_position[4] == 2) {
-    switch (sentence[comma_position[4]+1])
-    {
-    case 'E':
-      gga->longitude *= 1.0;
+  switch (comma_position[5] - comma_position[4]) {
+    case 1:
+      gga->longitude = 0.0;
       break;
-    case 'W':
-      gga->longitude *= -1.0;
+    case 2:
+      switch (sentence[comma_position[4]+1]) {
+        case 'E':
+          gga->longitude *= 1.0;
+          break;
+        case 'W':
+          gga->longitude *= -1.0;
+          break;
+        default:
+          return -1;
+      }
       break;
     default:
       return -1;
-    }
-  } else {
-    return -1;
   }
 
+  switch (comma_postion[6] - comma_postion[5]) {
+    case 1:
+      gga->quality = 0;
+      break;
+    case 2:
+      gga->quality = sentence[comma_position[5]+1] - '0';
+      break;
+    default:
+      return -1;
+  }
+  
   ...
   
   return 0;
