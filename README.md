@@ -2,7 +2,7 @@
 C library for parsing NMEA 0183. It is designed for MCU and also can be used for PC.
 
 ## How to use
-Copy ```nmea_common.c```, ```nmea_common.h```, ```nmea_gprmc.c``` and ```nmea.h``` to your project, and write code like follows.
+If you want to parse GPRMC, you should copy ```nmea_common.c```, ```nmea_common.h```, ```nmea_gprmc.c``` and ```nmea.h``` to your project, and write code like follows.
 ```
 #include "nmea.h"
 #include <stdio.h>
