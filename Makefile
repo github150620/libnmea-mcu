@@ -1,16 +1,12 @@
-all: test
+CC := gcc
+OBJECTS := test.o nmea_common.o nmea_gprmc.o
 
-nmea_common.o: nmea_common.c
-	gcc -c nmea_common.c
+test:
+	$(cc) -o test $(OBJECTS)
 
-nmea_gprmc.o: nmea_gprmc.c
-	gcc -c nmea_gprmc.c
+%.o: %.c
+	$(cc) -c -o $@ $<
 
-test.o: test.c
-	gcc -c test.c
-
-test: nmea_common.o nmea_gprmc.o test.o
-	gcc -o test nmea_common.o nmea_gprmc.o test.o
-
+.PHONY: clean
 clean:
 	rm -rf *.o test
