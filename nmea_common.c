@@ -1,9 +1,10 @@
-
+#include "nmea_common.h"
 
 int nmea_parse_latitude(char *s, int len, double *latitude) {
   double lat = 0.0;
+
   if (len <= 0 || len < 4) return -1;
-  
+
   lat += (s[0] - '0') * 10;
   lat += (s[1] - '0') * 1;
   lat += (s[2] - '0') / 6.0;
@@ -15,7 +16,7 @@ int nmea_parse_latitude(char *s, int len, double *latitude) {
   if (len >= 7)  lat += (s[6] - '0') / 6000.0;
   if (len >= 8)  lat += (s[7] - '0') / 60000.0;
   if (len >= 9)  lat += (s[8] - '0') / 600000.0;
-  if (len >= 10) lat += (s[9] - '0') / 6000000.0;  
+  if (len >= 10) lat += (s[9] - '0') / 6000000.0;
 
   *latitude = lat;
   return 0;
@@ -25,7 +26,7 @@ int nmea_parse_longitude(char *s, int len, double *longitude) {
   double lng = 0.0;
 
   if (len <= 0 || len < 5) return -1;
-  
+
   lng += (s[0] - '0') * 100;
   lng += (s[1] - '0') * 10;
   lng += (s[2] - '0') * 1;
