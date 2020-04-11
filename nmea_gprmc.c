@@ -118,6 +118,7 @@ int nmea_parse_gprmc(char *sentence, nmea_gprmc_t *rmc) {
         default:
           return -1;
       }
+      break;
     default:
       return -1;
   }
