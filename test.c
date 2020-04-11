@@ -28,5 +28,29 @@ int main() {
         rmc.date[3],
         rmc.date[4],
         rmc.date[5]);
+
+    char s2[] = "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n";
+    nmea_gpgga_t gga;
+    nmea_parse_gpgga(s2, &gga);
+
+    printf("\n\n-------- sentence --------\n");
+    printf("%s\n", s2);
+
+    printf("-------- parse --------\n");
+    printf("     time: %c%c%c%c%c%c\n",
+        gga.time[0],
+        gga.time[1],
+        gga.time[2],
+        gga.time[3],
+        gga.time[4],
+        gga.time[5]);
+    printf(" latitude: %f\n", gga.latitude);
+    printf("longitude: %f\n", gga.longitude);
+    printf("  quality: %d\n", gga.quality);
+    printf("    NoSBT: %d\n", gga.NoSBT);
+    printf("     HDoP: %f\n", gga.HDoP);
+    printf(" altitude: %f\n", gga.altitude);
+    printf("      HoG: %f\n", gga.HoG);
+
     return 0;
 }

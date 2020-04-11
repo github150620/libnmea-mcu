@@ -14,6 +14,7 @@ typedef struct {
   double longitude; // - 180 ~ +180
   int    quality;   // 0 ~ 8
   int    NoSBT;     // Number of satellites being tracked
+  double HDoP;      // Horizontal dilution of position
   double altitude;  // Altitude, Meters, above mean sea level
   double HoG;       // Height of geoid (mean sea level) above WGS84 ellipsoid
 }nmea_gpgga_t;

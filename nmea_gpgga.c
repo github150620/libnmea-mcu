@@ -1,4 +1,6 @@
 #include "nmea.h"
+#include "nmea_common.h"
+
 #include <stdint.h>
 #include <string.h>
 
@@ -48,20 +50,11 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
   if (comma_position[2] - comma_position[1] == 1) {
     gga->latitude = 0.0;
   } else if (comma_position[2] - comma_position[1] >= 9) {
-    p = &sentence[comma_position[1]+1];
-    gga->latitude = 0.0;
-    gga->latitude += (p[0] - '0') * 10;
-    gga->latitude += (p[1] - '0') * 1;
-    gga->latitude += (p[2] - '0') / 6.0;
-    gga->latitude += (p[3] - '0') / 60.0;
-    if (p[4] != '.') return -1;
-    gga->latitude += (p[5] - '0') / 600.0;
-    gga->latitude += (p[6] - '0') / 6000.0;
-    gga->latitude += (p[7] - '0') / 60000.0;
-    if (comma_position[2] - comma_position[1] >= 11) {
-      gga->latitude += (p[8] - '0') / 600000.0;
-      gga->latitude += (p[9] - '0') / 6000000.0;
-    }
+    nmea_parse_latitude(
+      &sentence[comma_position[1]+1],
+      comma_position[2] - comma_position[1] - 1,
+      &gga->latitude
+    );
   } else {
     return -1;
   }
@@ -88,21 +81,11 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
   if (comma_position[4] - comma_position[3] == 1) {
     gga->longitude = 0.0;
   } else if (comma_position[4] - comma_position[3] >= 10) {
-    p = &sentence[comma_position[3]+1];
-    gga->longitude = 0.0;
-    gga->longitude += (p[0] - '0') * 100;
-    gga->longitude += (p[1] - '0') * 10;
-    gga->longitude += (p[2] - '0') * 1;
-    gga->longitude += (p[3] - '0') / 6.0;
-    gga->longitude += (p[4] - '0') / 60.0;
-    if (p[5] != '.') return -1;
-    gga->longitude += (p[6] - '0') / 600.0;
-    gga->longitude += (p[7] - '0') / 6000.0;
-    gga->longitude += (p[8] - '0') / 60000.0;
-    if (comma_position[4] - comma_position[3] >= 12) {
-      gga->longitude += (p[9] - '0') / 600000.0;
-      gga->longitude += (p[10] - '0') / 6000000.0;
-    }
+    nmea_parse_longitude(
+      &sentence[comma_position[3]+1],
+      comma_position[4] - comma_position[3] - 1,
+      &gga->longitude
+    );
   } else {
     return -1;
   }
@@ -141,7 +124,10 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
   
   // Number of satellites being tracked
   switch (comma_position[7] - comma_position[6]) {
-    case 2:
+    case 1:
+      gga->NoSBT = 0;
+      break;
+    case 3:
       gga->NoSBT = sentence[comma_position[6]+1] - '0';
       gga->NoSBT = gga->NoSBT * 10 + (sentence[comma_position[6]+2] - '0');
       break;
@@ -149,19 +135,79 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
       return -1;
   }
   
-  // Altitude
+  // Horizontal dilution of position
   if (comma_position[8] - comma_position[7] == 1) {
+      gga->HDoP = 0.0;
+  } else {
+      nmea_parse_double(
+        &sentence[comma_position[7]+1],
+        comma_position[8] - comma_position[7] - 1,
+        &gga->HDoP
+      );
+  }
+
+  // Altitude
+  if (comma_position[9] - comma_position[8] == 1) {
     gga->altitude = 0.0;
   } else {
     gga->altitude = 0.0;
-    for (i=comma_position[7]+1; i<comma_position[8]; i++){
-      gga->altitude *= 10;
-      gga->altitude = sentence[comma_position[7] + 1 + i] - '0';
-      ...
-    }
+    nmea_parse_double(
+      &sentence[comma_position[8]+1], 
+      comma_position[9] - comma_position[8] - 1,
+      &gga->altitude
+    );
   }
-  
-  ...
-    
+
+  switch (comma_position[10] - comma_position[9]) {
+    case 1:
+      gga->altitude = 0.0;
+      break;
+    case 2:
+      switch (sentence[comma_position[9]+1]) {
+        case 'M':
+          gga->altitude *= 1.0;
+          break;
+        case 'K':
+          gga->altitude *= 1000.0;
+          break;
+        default:
+          return -1;
+      }
+      break;
+    default:
+      return -1;
+  }
+
+  if (comma_position[11] - comma_position[10] == 1) {
+    gga->HoG = 0.0;
+  } else {
+    gga->HoG = 0.0;
+    nmea_parse_double(
+      &sentence[comma_position[10]+1], 
+      comma_position[11] - comma_position[10] - 1,
+      &gga->HoG
+    );
+  }
+
+  switch (comma_position[12] - comma_position[11]) {
+    case 1:
+      gga->HoG = 0.0;
+      break;
+    case 2:
+      switch (sentence[comma_position[11]+1]) {
+        case 'M':
+          gga->HoG *= 1.0;
+          break;
+        case 'K':
+          gga->HoG *= 1000.0;
+          break;
+        default:
+          return -1;
+      }
+      break;
+    default:
+      return -1;
+  }
+
   return 0;
 }

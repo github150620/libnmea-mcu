@@ -1,5 +1,5 @@
 CC := gcc
-OBJECTS := test.o nmea_common.o nmea_gprmc.o
+OBJECTS := test.o nmea_common.o nmea_gprmc.o nmea_gpgga.o
 
 test: $(OBJECTS)
 	$(CC) -o test $(OBJECTS)
