@@ -127,7 +127,8 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
       return -1;
   }
 
-  switch (comma_postion[6] - comma_postion[5]) {
+  // quality
+  switch (comma_position[6] - comma_position[5]) {
     case 1:
       gga->quality = 0;
       break;
@@ -138,7 +139,29 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
       return -1;
   }
   
-  ...
+  // Number of satellites being tracked
+  switch (comma_position[7] - comma_position[6]) {
+    case 2:
+      gga->NoSBT = sentence[comma_position[6]+1] - '0';
+      gga->NoSBT = gga->NoSBT * 10 + (sentence[comma_position[6]+2] - '0');
+      break;
+    default:
+      return -1;
+  }
   
+  // Altitude
+  if (comma_position[8] - comma_position[7] == 1) {
+    gga->altitude = 0.0;
+  } else {
+    gga->altitude = 0.0;
+    for (i=comma_position[7]+1; i<comma_position[8]; i++){
+      gga->altitude *= 10;
+      gga->altitude = sentence[comma_position[7] + 1 + i] - '0';
+      ...
+    }
+  }
+  
+  ...
+    
   return 0;
 }
