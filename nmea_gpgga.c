@@ -58,7 +58,7 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
     gga->latitude += (p[5] - '0') / 600.0;
     gga->latitude += (p[6] - '0') / 6000.0;
     gga->latitude += (p[7] - '0') / 60000.0;
-    if (comma_position[3] - comma_position[2] >= 11) {
+    if (comma_position[2] - comma_position[1] >= 11) {
       gga->latitude += (p[8] - '0') / 600000.0;
       gga->latitude += (p[9] - '0') / 6000000.0;
     }
@@ -99,7 +99,7 @@ int nmea_parse_gpgga(char *sentence, nmea_gpgga_t *gga) {
     gga->longitude += (p[6] - '0') / 600.0;
     gga->longitude += (p[7] - '0') / 6000.0;
     gga->longitude += (p[8] - '0') / 60000.0;
-    if (comma_position[5] - comma_position[4] >= 12) {
+    if (comma_position[4] - comma_position[3] >= 12) {
       gga->longitude += (p[9] - '0') / 600000.0;
       gga->longitude += (p[10] - '0') / 6000000.0;
     }
