@@ -9,7 +9,7 @@ nmea_gprmc.o: nmea_gprmc.c
 test.o: test.c
 	gcc -c test.c
 
-test: nmea.o test.o
+test: nmea_common.o nmea_gprmc.o test.o
 	gcc -o test nmea_common.o nmea_gprmc.o test.o
 
 clean:
